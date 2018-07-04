@@ -2,20 +2,20 @@ body {
     margin-top: 150px;
     text-align: center;
 }
-
 .box {
     height: 50px;
     width: 50px;
     outline: black solid 2px;
     display: inline-block;
+    vertical-align: top;
+    font-size: 0px;
 }
 
 div .bomb {
     background-image: url("https://lh3.googleusercontent.com/F6o_idIUUbCs-6qkn9WRDoBNArm9eUyLNgA-mDS5u7ofbQNkrKZmaeoPcQlX-kMQWlH9bCh4e3wES7shwyfiTGfTlrpyNDHzmCjl14pKYvax59yhgwc_aQvQfQPLl9T0gdtnfgMADKzmpzyiKTpKplJ3lu2zEkSZEgP67SFimvrFpxdXuSl2wgxrPxAI7z-a8TuMj8MchWk71_EmB9ehX-tqoaLT5_6BICS6VsSqhqsMFP0reB__Uibk-20uzVq5olwOYsApyHH7P9H0dBcgfVRw011Gt0kR_1dItUya3xmUbuhih0ihPQMTupHm8pPrIZx4lUhO31GLmgLYKJpZNZdS1niBN4-MmvggEnAzBJSgrIRpC48uXvwhhCHHNWSoT8Z3se5uONPA7Og7az9yH7q3Cdnjv4sNQUrcJr9nZyTpU_OQUtizxoM-JILtVbg7wzw2cMStFBIYOdZZ0DS3sL1APZM0tOBLNqmmfgSER6elnkJawroE_TyYl30NmiBYCkWPD8XVLV9XmaN3Hiw9wm-ZgtoN3ez8KQlCKC2YwEsSK5j0WqQFnWOkgJFm26PP0vTtujF1_NPZCA76EKDJZZwgkGTmr3H0uxZwCJM=s50-no");
     height: 50px;
     width: 50px;
-    /* background-size: 0,0; */
-    background-color: grey;
+    background-size: 0px;
 }
 
 
