@@ -1,3 +1,7 @@
+let bombNumber = 10;
+let rows = 8;
+let columns = 8;
+
 //Builds Board to custom size
 let n = 0;
 function buildBoard(rows, columns) {
@@ -21,8 +25,8 @@ function buildGameArray(columns) {
         arr[j] = new Array(columns); 
     }
 }
-buildBoard(8,8);
-buildGameArray(8);
+buildBoard(rows,columns);
+buildGameArray(columns);
 //Sets array values to zero so if not close to any bomb it shows 0
     for (let i = 0; i<arr.length;i+=1) {
         for (let j = 0;j<arr[i].length; j+=1) {
@@ -79,7 +83,7 @@ function findNeighbors(x,y) {
     }
 }
 //Place bombs on board
-placeBombs(10,8,8);
+placeBombs(bombNumber,rows,columns);
 
 //Prints from array to gameboard how many bombs each space is touching
 for (let i = 0; i<arr.length;i+=1) {
@@ -89,22 +93,26 @@ for (let i = 0; i<arr.length;i+=1) {
         }
     }
 }
+//Reveals all other bombs on board if you click on a bomb
 function revealBombs () {
     for(i=0; i<10;i+=1)
     document.querySelectorAll('.bomb')[i].style.objectPosition = '0';
 }
 
+//Function to reveal the box when clicked
 function revealBox(e) {
-    if (e.target.className.includes('box bomb') && !(e.target.style.backgroundColor === 'green')) {
+    if (e.target.className.includes('box bomb')) {
         e.target.style.objectPosition = '0';
         revealBombs();
+        document.querySelector('#container').removeEventListener('click',revealBox);
         console.log("Game Over");
-    } if (e.target.className === 'box'&& !(e.target.style.backgroundColor === 'green')) {
+    } if (e.target.className === 'box') {
         e.target.style.fontSize = '35px';
         e.target.style.backgroundColor = 'white';
         e.target.setAttribute('data-num', 0);
     }
 }
+//Function to freeze box if right-clicked and unfreeze if right-clicked again
 function rightClick(e) {
     if (e.target.className.includes('box') && !(e.target.getAttribute('data-num') === "1") && !(e.target.getAttribute('data-num') === "0") ) {
         e.preventDefault();
@@ -119,15 +127,15 @@ function rightClick(e) {
         e.target.setAttribute('data-num', 2);
     }
 }
-// function rightClickOff(e) {
-//     if (e.target.className.includes('box') && e.target.style.backgroundColor === 'green') {
-//         e.preventDefault();
-//         e.target.style.backgroundColor = 'lightgrey';
-//         e.target.addEventListener('click',revealBox);
-//     }
-// }
+document.querySelector('h2').textContent = `Bombs: ${bombNumber}`;
 
+function resetGame() {
+    debugger;
+    window.location.reload(false);
+}
 
 
 document.querySelector('#container').addEventListener('click',revealBox);
 document.querySelector('#container').addEventListener('contextmenu',rightClick);
+//Reset game button 
+document.querySelector('button').addEventListener('click',resetGame);
