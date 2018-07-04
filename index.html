@@ -10,7 +10,16 @@
 <header>
         <h1>Minesweeper</h1>
         <h2></h2>
-        <button>Restart Game</button>
+        <form>
+            <span>Difficulty:</span>
+            <select class="form" name="difficulty">
+                <option value="easy" selected>Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+            <br><br>
+        </form>
+        <button id="submit">Restart Game</button> 
 </header>
 <body>
     <div id='container'></div>
