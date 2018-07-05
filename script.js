@@ -29,6 +29,7 @@ document.querySelector('#submit').addEventListener('click',amtrc);
 
 
 //Builds Board to custom size
+let w = 0;
 let n = 0;
 function buildBoard(rows, columns) {
     for (let j = 0; j< columns; j+=1) {
@@ -130,6 +131,7 @@ bombNeighbors();
         document.querySelector(`#box${i}${j}`).textContent += arr[i][j];
         }
     }
+}
 // }
 // numbalgorithm();
 
@@ -140,7 +142,7 @@ function revealBombs () {
 }
 
 //Function to reveal the box when clicked
-let w = 0;
+//let w = 0;
 function revealBox(e) {
     if (e.target.className.includes('box bomb') && !(e.target.getAttribute('data-num') === "1")) {
         e.target.style.objectPosition = '0';
@@ -149,10 +151,33 @@ function revealBox(e) {
         document.querySelector('body').removeEventListener('contextmenu',rightClick);
         document.querySelector('h2').textContent = `Game Over`;
     } if (e.target.className === 'box' && !(e.target.getAttribute('data-num') === "1")) {
-        w+=1;
-        e.target.style.fontSize = '35px';
-        e.target.style.backgroundColor = 'white';
-        e.target.setAttribute('data-num', 0);
+            if (e.target.textContent === '0') {
+                if (e.target.id.length === 5) {
+                    let place = e.target.id.match(/\d/g);
+                    let x = parseInt(place[0]);
+                    let y = parseInt(place[1]);
+                    openZeros(x,y);     
+                } else {
+                    let place = e.target.id.replace( /^\D+/g, '');
+                    let x = parseInt(place.slice(0,2));
+                    let y = parseInt(place.slice(2));
+                    openZeros(x,y)
+            }
+        }
+        if (!(e.target.style.backgroundColor === 'white')) {
+            w+=1;
+        }
+            if (e.target.textContent === '0'){
+                e.target.style.backgroundColor = 'white';
+                e.target.setAttribute('data-num', 0);
+            } else {
+                e.target.style.fontSize = '35px';
+                e.target.style.backgroundColor = 'white';
+                e.target.setAttribute('data-num', 0);
+            }
+        // e.target.style.fontSize = '35px';
+        // e.target.style.backgroundColor = 'white';
+        // e.target.setAttribute('data-num', 0);
         if (w === n - bombNumber) {
             document.querySelector('h2').textContent = `Congrats You WIN!!`;
         }
@@ -175,6 +200,13 @@ function rightClick(e) {
 
 document.querySelector('h2').textContent = `Bombs: ${bombNumber}`;
 
+function removeBoard(rows) {
+    for (let i = rows-1; i >= 0; i-=1 ) {
+        document.querySelector(`#container`).removeChild(document.querySelector(`#container`).childNodes[i])
+    }
+}
+
+
 //Resets the game to correct level
 function resetGame() {
     w = 0;
@@ -183,7 +215,6 @@ function resetGame() {
     arr = [];
     alreadyThere = [];
     buildGameArray(columns);
-    debugger;
     for (let i = 0; i<arr.length;i+=1) {
         for (let j = 0;j<arr[i].length; j+=1) {
             arr[i][j] = 0;
@@ -200,15 +231,8 @@ function resetGame() {
     }
     document.querySelector('h2').textContent = `Bombs: ${bombNumber}`;
     document.querySelector('#container').addEventListener('click',revealBox);
-    document.querySelector('body').addEventListener('contextmenu',rightClick);
 }
 
-function removeBoard(rows) {
-    for (let i = rows-1; i >= 0; i-=1 ) {
-        document.querySelector(`#container`).removeChild(document.querySelector(`#container`).childNodes[i])
-    }
-}
-}
 
 document.querySelector('#container').addEventListener('contextmenu',rightClick);
 document.querySelector('#container').addEventListener('click',revealBox);
@@ -222,3 +246,258 @@ document.querySelector('#container').addEventListener('click',revealBox);
 // if document.querySelector('#box40').textContent === 0 then get x,y and search for and open all neighbors
 //Option above to get x,y (take box id and get x,y from there and plug into function which will open all found neighbors)
 //Somehow make it recursive so if any other boxes opened by the function have a 0 it will open all their neighbors
+
+// if (e.target.textContent === 0) {
+//    let place = e.target.id.match(/\d/g);
+//     openZeros(xy[0],xy[1]);     
+//    }
+
+function openZeros(x,y) {
+    if ((x-1 >= 0 && x-1 < arr.length) && (y-1 >= 0 && y-1 < arr.length)) {
+        let param1 = x-1;
+        let param2= y-1;
+        if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
+            w+=1;
+        }
+            if (document.querySelector(`#box${param1}${param2}`).textContent === '0'){
+                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
+                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
+            } else {
+                document.querySelector(`#box${param1}${param2}`).style.fontSize = '35px';
+                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
+                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
+            }
+        //     if (document.querySelector(`#box${x-1}${y-1}`).textContent === '0') {
+        //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
+        //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
+        //             let x = parseInt(place[0]);
+        //             let y = parseInt(place[1]);
+        //             //document.querySelector(`#box${param1}${param2}`).textContent = "";
+        //              openZeros(x,y);     
+        //             } else {
+        //                 let place = document.querySelector(`#box${param1}${param}`).id.replace( /^\D+/g, '');
+        //                 let x = parseInt(place.slice(0,2));
+        //                 let y = parseInt(place.slice(2));
+        //                 //document.querySelector(`#box${param1}${param2}`).textContent = "";
+        //                 openZeros(x,y)    
+        //             }
+        //     }
+    } if ((x >= 0 && x < arr.length) && (y-1 >= 0 && y-1 < arr.length)) {
+        param1 = x
+        param2 = y-1
+        if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
+            w+=1;
+        }
+            if (document.querySelector(`#box${param1}${param2}`).textContent === '0'){
+                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
+                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
+            } else {
+                document.querySelector(`#box${param1}${param2}`).style.fontSize = '35px';
+                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
+                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
+            }
+        // let param1 = x;
+        // let param2= y-1;
+        //     if (document.querySelector(`#box${x}${y-1}`).textContent === '0') {
+        //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
+        //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
+        //             let x = parseInt(place[0]);
+        //             let y = parseInt(place[1]);
+        //             //document.querySelector(`#box${param1}${param2}`).textContent = "";
+        //              openZeros(x,y);     
+        //             } else {
+        //                 let place = document.querySelector(`#box${param1}${param}`).id.replace( /^\D+/g, '');
+        //                 let x = parseInt(place.slice(0,2));
+        //                 let y = parseInt(place.slice(2));
+        //                 //document.querySelector(`#box${param1}${param2}`).textContent = "";
+        //                 openZeros(x,y)    
+        //             }
+        //     }
+    } if ((x+1 >= 0 && x+1 < arr.length) && (y-1 >= 0 && y-1 < arr.length)) {
+        param1 = x+1
+        param2 = y-1
+        if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
+            w+=1;
+        }
+            if (document.querySelector(`#box${param1}${param2}`).textContent === '0'){
+                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
+                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
+            } else {
+                document.querySelector(`#box${param1}${param2}`).style.fontSize = '35px';
+                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
+                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
+            }
+        // let param1 = x+1;
+        // let param2= y-1;
+        //     if (document.querySelector(`#box${x+1}${y-1}`).textContent === '0') {
+        //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
+        //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
+        //             let x = parseInt(place[0]);
+        //             let y = parseInt(place[1]);
+        //             //document.querySelector(`#box${param1}${param2}`).textContent = "";
+        //              openZeros(x,y);     
+        //             } else {
+        //                 let place = document.querySelector(`#box${param1}${param}`).id.replace( /^\D+/g, '');
+        //                 let x = parseInt(place.slice(0,2));
+        //                 let y = parseInt(place.slice(2));
+        //                 //document.querySelector(`#box${param1}${param2}`).textContent = "";
+        //                 openZeros(x,y)    
+        //             }
+        //     }
+    } if ((x-1 >= 0 && x-1 < arr.length) && (y >= 0 && y < arr.length)) {
+        param1 = x-1
+        param2 = y
+        if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
+            w+=1;
+        }
+            if (document.querySelector(`#box${param1}${param2}`).textContent === '0'){
+                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
+                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
+            } else {
+                document.querySelector(`#box${param1}${param2}`).style.fontSize = '35px';
+                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
+                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
+            }
+        // let param1 = x-1;
+        // let param2= y;
+        //     if (document.querySelector(`#box${x-1}${y}`).textContent === '0') {
+        //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
+        //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
+        //             let x = parseInt(place[0]);
+        //             let y = parseInt(place[1]);
+        //             //document.querySelector(`#box${param1}${param2}`).textContent = "";
+        //              openZeros(x,y);     
+        //             } else {
+        //                 let place = document.querySelector(`#box${param1}${param}`).id.replace( /^\D+/g, '');
+        //                 let x = parseInt(place.slice(0,2));
+        //                 let y = parseInt(place.slice(2));
+        //                 //document.querySelector(`#box${param1}${param2}`).textContent = "";
+        //                 openZeros(x,y)    
+        //             }
+        //     }
+    } if ((x+1 >= 0 && x+1 < arr.length) && (y >= 0 && y < arr.length)) {
+        param1 = x+1
+        param2 = y
+        if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
+            w+=1;
+        }
+            if (document.querySelector(`#box${param1}${param2}`).textContent === '0'){
+                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
+                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
+            } else {
+                document.querySelector(`#box${param1}${param2}`).style.fontSize = '35px';
+                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
+                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
+            }
+        // let param1 = x+1;
+        // let param2= y;
+        //     if (document.querySelector(`#box${x+1}${y}`).textContent === '0') {
+        //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
+        //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
+        //             let x = parseInt(place[0]);
+        //             let y = parseInt(place[1]);
+        //             //document.querySelector(`#box${param1}${param2}`).textContent = "";
+        //              openZeros(x,y);     
+        //             } else {
+        //                 let place = document.querySelector(`#box${param1}${param2}`).id.replace( /^\D+/g, '');
+        //                 let x = parseInt(place.slice(0,2));
+        //                 let y = parseInt(place.slice(2));
+        //                 //document.querySelector(`#box${param1}${param2}`).textContent = "";
+        //                 openZeros(x,y)    
+        //             }
+        //     }
+    } if ((x-1 >= 0 && x-1 < arr.length) && (y+1 >= 0 && y+1 < arr.length)) {
+        param1 = x-1
+        param2 = y+1
+        if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
+            w+=1;
+        }
+            if (document.querySelector(`#box${param1}${param2}`).textContent === '0'){
+                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
+                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
+            } else {
+                document.querySelector(`#box${param1}${param2}`).style.fontSize = '35px';
+                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
+                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
+            }
+        // let param1 = x-1;
+        // let param2= y+1;
+        //     if (document.querySelector(`#box${x-1}${y+1}`).textContent === '0') {
+        //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
+        //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
+        //             let x = parseInt(place[0]);
+        //             let y = parseInt(place[1]);
+        //             //document.querySelector(`#box${param1}${param2}`).textContent = "";
+        //              openZeros(x,y);     
+        //             } else {
+        //                 let place = document.querySelector(`#box${param1}${param}`).id.replace( /^\D+/g, '');
+        //                 let x = parseInt(place.slice(0,2));
+        //                 let y = parseInt(place.slice(2));
+        //                 //document.querySelector(`#box${param1}${param2}`).textContent = "";
+        //                 openZeros(x,y)    
+        //             }
+        //     }
+    } if ((x >= 0 && x < arr.length) && (y+1 >= 0 && y+1 < arr.length)) {
+        param1 = x
+        param2 = y+1
+        if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
+            w+=1;
+        }
+            if (document.querySelector(`#box${param1}${param2}`).textContent === '0'){
+                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
+                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
+            } else {
+                document.querySelector(`#box${param1}${param2}`).style.fontSize = '35px';
+                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
+                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
+            }
+        // let param1 = x;
+        // let param2= y+1;
+        //     if (document.querySelector(`#box${x}${y+1}`).textContent === '0') {
+        //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
+        //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
+        //             let x = parseInt(place[0]);
+        //             let y = parseInt(place[1]);
+        //             //document.querySelector(`#box${param1}${param2}`).textContent = "";
+        //              openZeros(x,y);     
+        //             } else {
+        //                 let place = document.querySelector(`#box${param1}${param}`).id.replace( /^\D+/g, '');
+        //                 let x = parseInt(place.slice(0,2));
+        //                 let y = parseInt(place.slice(2));
+        //                 //document.querySelector(`#box${param1}${param2}`).textContent = "";
+        //                 openZeros(x,y)    
+        //             }
+        //     }
+    } if ((x+1 >= 0 && x+1 < arr.length) && (y+1 >= 0 && y+1 < arr.length)) {
+        param1 = x+1
+        param2 = y+1
+        if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
+            w+=1;
+        }
+            if (document.querySelector(`#box${param1}${param2}`).textContent === '0'){
+                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
+                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
+            } else {
+                document.querySelector(`#box${param1}${param2}`).style.fontSize = '35px';
+                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
+                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
+            }
+        // let param1 = x+1;
+        // let param2= y+1;
+        //     if (document.querySelector(`#box${x+1}${y+1}`).textContent === '0') {
+        //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
+        //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
+        //             let x = parseInt(place[0]);
+        //             let y = parseInt(place[1]);
+        //             //document.querySelector(`#box${param1}${param2}`).textContent = "";
+        //              openZeros(x,y);     
+        //             } else {
+        //                 let place = document.querySelector(`#box${param1}${param2}`).id.replace( /^\D+/g, '');
+        //                 let x = parseInt(place.slice(0,2));
+        //                 let y = parseInt(place.slice(2));
+        //                 //document.querySelector(`#box${param1}${param2}`).textContent = "";
+        //                 openZeros(x,y)    
+        //             }
+        //     }
+    }
+}
