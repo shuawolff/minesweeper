@@ -1,4 +1,4 @@
-let bombNumber = 10;
+let bombNumber = 3;
 let rows = 8;
 let columns = 8;
 
@@ -156,12 +156,14 @@ function revealBox(e) {
                     let place = e.target.id.match(/\d/g);
                     let x = parseInt(place[0]);
                     let y = parseInt(place[1]);
-                    openZeros(x,y);     
+                    openZeros(x,y);
+                    openRest();     
                 } else {
                     let place = e.target.id.replace( /^\D+/g, '');
                     let x = parseInt(place.slice(0,2));
                     let y = parseInt(place.slice(2));
                     openZeros(x,y)
+                    openRest();
             }
         }
         if (!(e.target.style.backgroundColor === 'white')) {
@@ -251,22 +253,34 @@ document.querySelector('#container').addEventListener('click',revealBox);
 //    let place = e.target.id.match(/\d/g);
 //     openZeros(xy[0],xy[1]);     
 //    }
-
+function openRest() {
+for (let i = 0;i < toOpen.length;i+=0) {
+    if (!(document.querySelector(`#box${toOpen[i].x}${toOpen[i].y}`).style.backgroundColor === 'white')) {
+        w+=1;
+    }
+        if (document.querySelector(`#box${toOpen[i].x}${toOpen[i].y}`).textContent === '0'){
+            debugger;
+            openZeros(toOpen[i].x,toOpen[i].y)
+            document.querySelector(`#box${toOpen[i].x}${toOpen[i].y}`).style.backgroundColor = 'white';
+            document.querySelector(`#box${toOpen[i].x}${toOpen[i].y}`).setAttribute('data-num', 0);
+        } else {
+            document.querySelector(`#box${toOpen[i].x}${toOpen[i].y}`).style.fontSize = '35px';
+            document.querySelector(`#box${toOpen[i].x}${toOpen[i].y}`).style.backgroundColor = 'white';
+            document.querySelector(`#box${toOpen[i].x}${toOpen[i].y}`).setAttribute('data-num', 0);
+        }
+        toOpen.shift();
+    }
+    debugger;
+}
+let toOpen = [];
 function openZeros(x,y) {
     if ((x-1 >= 0 && x-1 < arr.length) && (y-1 >= 0 && y-1 < arr.length)) {
+        let topLeft = {x:x-1, y:y-1};
         let param1 = x-1;
-        let param2= y-1;
+        let param2 = y-1;
         if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
-            w+=1;
-        }
-            if (document.querySelector(`#box${param1}${param2}`).textContent === '0'){
-                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
-                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
-            } else {
-                document.querySelector(`#box${param1}${param2}`).style.fontSize = '35px';
-                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
-                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
-            }
+        toOpen.push(topLeft);
+    }
         //     if (document.querySelector(`#box${x-1}${y-1}`).textContent === '0') {
         //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
         //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
@@ -283,21 +297,12 @@ function openZeros(x,y) {
         //             }
         //     }
     } if ((x >= 0 && x < arr.length) && (y-1 >= 0 && y-1 < arr.length)) {
-        param1 = x
-        param2 = y-1
+        let left = {x:x, y:y-1};
+        let param1 = x;
+        let param2= y-1;
         if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
-            w+=1;
-        }
-            if (document.querySelector(`#box${param1}${param2}`).textContent === '0'){
-                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
-                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
-            } else {
-                document.querySelector(`#box${param1}${param2}`).style.fontSize = '35px';
-                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
-                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
-            }
-        // let param1 = x;
-        // let param2= y-1;
+        toOpen.push(left);
+    }
         //     if (document.querySelector(`#box${x}${y-1}`).textContent === '0') {
         //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
         //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
@@ -314,21 +319,12 @@ function openZeros(x,y) {
         //             }
         //     }
     } if ((x+1 >= 0 && x+1 < arr.length) && (y-1 >= 0 && y-1 < arr.length)) {
-        param1 = x+1
-        param2 = y-1
+        let bottomLeft = {x:x+1,y:y-1};
+        let param1 = x+1;
+        let param2= y-1;
         if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
-            w+=1;
+            toOpen.push(bottomLeft);
         }
-            if (document.querySelector(`#box${param1}${param2}`).textContent === '0'){
-                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
-                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
-            } else {
-                document.querySelector(`#box${param1}${param2}`).style.fontSize = '35px';
-                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
-                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
-            }
-        // let param1 = x+1;
-        // let param2= y-1;
         //     if (document.querySelector(`#box${x+1}${y-1}`).textContent === '0') {
         //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
         //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
@@ -345,21 +341,12 @@ function openZeros(x,y) {
         //             }
         //     }
     } if ((x-1 >= 0 && x-1 < arr.length) && (y >= 0 && y < arr.length)) {
-        param1 = x-1
-        param2 = y
+        let topCenter = {x:x-1, y:y};
+        let param1 = x-1;
+        let param2= y;
         if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
-            w+=1;
-        }
-            if (document.querySelector(`#box${param1}${param2}`).textContent === '0'){
-                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
-                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
-            } else {
-                document.querySelector(`#box${param1}${param2}`).style.fontSize = '35px';
-                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
-                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
-            }
-        // let param1 = x-1;
-        // let param2= y;
+        toOpen.push(topCenter);
+    }
         //     if (document.querySelector(`#box${x-1}${y}`).textContent === '0') {
         //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
         //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
@@ -376,21 +363,12 @@ function openZeros(x,y) {
         //             }
         //     }
     } if ((x+1 >= 0 && x+1 < arr.length) && (y >= 0 && y < arr.length)) {
-        param1 = x+1
-        param2 = y
+        let bottomCenter = {x:x+1, y:y};
+        let param1 = x+1;
+        let param2= y;
         if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
-            w+=1;
-        }
-            if (document.querySelector(`#box${param1}${param2}`).textContent === '0'){
-                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
-                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
-            } else {
-                document.querySelector(`#box${param1}${param2}`).style.fontSize = '35px';
-                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
-                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
-            }
-        // let param1 = x+1;
-        // let param2= y;
+        toOpen.push(bottomCenter);
+    }
         //     if (document.querySelector(`#box${x+1}${y}`).textContent === '0') {
         //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
         //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
@@ -407,21 +385,12 @@ function openZeros(x,y) {
         //             }
         //     }
     } if ((x-1 >= 0 && x-1 < arr.length) && (y+1 >= 0 && y+1 < arr.length)) {
-        param1 = x-1
-        param2 = y+1
+        let topRight = {x:x-1, y:y+1};
+        let param1 = x-1;
+        let param2= y+1;
         if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
-            w+=1;
-        }
-            if (document.querySelector(`#box${param1}${param2}`).textContent === '0'){
-                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
-                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
-            } else {
-                document.querySelector(`#box${param1}${param2}`).style.fontSize = '35px';
-                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
-                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
-            }
-        // let param1 = x-1;
-        // let param2= y+1;
+        toOpen.push(topRight);
+    }
         //     if (document.querySelector(`#box${x-1}${y+1}`).textContent === '0') {
         //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
         //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
@@ -438,21 +407,12 @@ function openZeros(x,y) {
         //             }
         //     }
     } if ((x >= 0 && x < arr.length) && (y+1 >= 0 && y+1 < arr.length)) {
-        param1 = x
-        param2 = y+1
+        let right = {x:x, y:y+1};
+        let param1 = x;
+        let param2= y+1;
         if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
-            w+=1;
-        }
-            if (document.querySelector(`#box${param1}${param2}`).textContent === '0'){
-                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
-                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
-            } else {
-                document.querySelector(`#box${param1}${param2}`).style.fontSize = '35px';
-                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
-                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
-            }
-        // let param1 = x;
-        // let param2= y+1;
+        toOpen.push(right);
+    }
         //     if (document.querySelector(`#box${x}${y+1}`).textContent === '0') {
         //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
         //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
@@ -469,21 +429,12 @@ function openZeros(x,y) {
         //             }
         //     }
     } if ((x+1 >= 0 && x+1 < arr.length) && (y+1 >= 0 && y+1 < arr.length)) {
-        param1 = x+1
-        param2 = y+1
+        let bottomRight = {x:x+1, y:y+1};
+        let param1 = x+1;
+        let param2= y+1;
         if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
-            w+=1;
+        toOpen.push(bottomRight);
         }
-            if (document.querySelector(`#box${param1}${param2}`).textContent === '0'){
-                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
-                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
-            } else {
-                document.querySelector(`#box${param1}${param2}`).style.fontSize = '35px';
-                document.querySelector(`#box${param1}${param2}`).style.backgroundColor = 'white';
-                document.querySelector(`#box${param1}${param2}`).setAttribute('data-num', 0);
-            }
-        // let param1 = x+1;
-        // let param2= y+1;
         //     if (document.querySelector(`#box${x+1}${y+1}`).textContent === '0') {
         //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
         //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
@@ -499,5 +450,6 @@ function openZeros(x,y) {
         //                 openZeros(x,y)    
         //             }
         //     }
-    }
+    return toOpen;
+}
 }
