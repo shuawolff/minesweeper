@@ -1,4 +1,4 @@
-let bombNumber = 3;
+let bombNumber = 10;
 let rows = 8;
 let columns = 8;
 
@@ -39,7 +39,7 @@ function buildBoard(rows, columns) {
         for (let i = 0; i < rows; i+=1 ) {
             let div = document.createElement('div');
             div.className = 'box';
-            div.id = `box${j}${i}`;
+            div.id = `box${j}-${i}`;
             div.setAttribute('data-num', 2);
             document.querySelector(`#Row${j}`).appendChild(div);
             n+=1;
@@ -50,7 +50,7 @@ function buildBoard(rows, columns) {
 let arr = [];
 function buildGameArray(columns) {
     for (let j = 0; j< columns; j+=1) {
-        arr[j] = new Array(columns); 
+        arr[j] = new Array(columns);
     }
 }
 buildBoard(rows,columns);
@@ -72,7 +72,7 @@ function placeBombs(num, rows, columns) {
             console.log("Gotcha");
         }
         alreadyThere.push(`${random}-${random2}`);
-        document.querySelector(`#box${random}${random2}`).className += ' bomb';
+        document.querySelector(`#box${random}-${random2}`).className += ' bomb';
         arr[random][random2] = 'bomb';
     }
 }
@@ -128,15 +128,14 @@ bombNeighbors();
     for (let i = 0; i<arr.length;i+=1) {
     for (let j = 0;j<arr[i].length; j+=1) {
         if (!(arr[i][j] === 'bomb')) {
-        document.querySelector(`#box${i}${j}`).textContent += arr[i][j];
+        document.querySelector(`#box${i}-${j}`).textContent += arr[i][j];
         }
     }
 }
-// }
-// numbalgorithm();
 
 //Reveals all other bombs on board if you click on a bomb
 function revealBombs () {
+    debugger;
     for(i=0; i< bombNumber;i+=1)
     document.querySelectorAll('.bomb')[i].style.objectPosition = '0';
 }
@@ -227,7 +226,7 @@ function resetGame() {
     for (let i = 0; i<arr.length;i+=1) {
         for (let j = 0;j<arr[i].length; j+=1) {
             if (!(arr[i][j] === 'bomb')) {
-                document.querySelector(`#box${i}${j}`).textContent += arr[i][j];
+                document.querySelector(`#box${i}-${j}`).textContent += arr[i][j];
             }
         }
     }
@@ -255,22 +254,20 @@ document.querySelector('#container').addEventListener('click',revealBox);
 //    }
 function openRest() {
 for (let i = 0;i < toOpen.length;i+=0) {
-    if (!(document.querySelector(`#box${toOpen[i].x}${toOpen[i].y}`).style.backgroundColor === 'white')) {
+    if (!(document.querySelector(`#box${toOpen[i].x}-${toOpen[i].y}`).style.backgroundColor === 'white')) {
         w+=1;
     }
-        if (document.querySelector(`#box${toOpen[i].x}${toOpen[i].y}`).textContent === '0'){
-            debugger;
+        if (document.querySelector(`#box${toOpen[i].x}-${toOpen[i].y}`).textContent === '0'){
             openZeros(toOpen[i].x,toOpen[i].y)
-            document.querySelector(`#box${toOpen[i].x}${toOpen[i].y}`).style.backgroundColor = 'white';
-            document.querySelector(`#box${toOpen[i].x}${toOpen[i].y}`).setAttribute('data-num', 0);
+            document.querySelector(`#box${toOpen[i].x}-${toOpen[i].y}`).style.backgroundColor = 'white';
+            document.querySelector(`#box${toOpen[i].x}-${toOpen[i].y}`).setAttribute('data-num', 0);
         } else {
-            document.querySelector(`#box${toOpen[i].x}${toOpen[i].y}`).style.fontSize = '35px';
-            document.querySelector(`#box${toOpen[i].x}${toOpen[i].y}`).style.backgroundColor = 'white';
-            document.querySelector(`#box${toOpen[i].x}${toOpen[i].y}`).setAttribute('data-num', 0);
+            document.querySelector(`#box${toOpen[i].x}-${toOpen[i].y}`).style.fontSize = '35px';
+            document.querySelector(`#box${toOpen[i].x}-${toOpen[i].y}`).style.backgroundColor = 'white';
+            document.querySelector(`#box${toOpen[i].x}-${toOpen[i].y}`).setAttribute('data-num', 0);
         }
         toOpen.shift();
     }
-    debugger;
 }
 let toOpen = [];
 function openZeros(x,y) {
@@ -278,178 +275,58 @@ function openZeros(x,y) {
         let topLeft = {x:x-1, y:y-1};
         let param1 = x-1;
         let param2 = y-1;
-        if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
+        if (!(document.querySelector(`#box${param1}-${param2}`).style.backgroundColor === 'white')) {
         toOpen.push(topLeft);
     }
-        //     if (document.querySelector(`#box${x-1}${y-1}`).textContent === '0') {
-        //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
-        //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
-        //             let x = parseInt(place[0]);
-        //             let y = parseInt(place[1]);
-        //             //document.querySelector(`#box${param1}${param2}`).textContent = "";
-        //              openZeros(x,y);     
-        //             } else {
-        //                 let place = document.querySelector(`#box${param1}${param}`).id.replace( /^\D+/g, '');
-        //                 let x = parseInt(place.slice(0,2));
-        //                 let y = parseInt(place.slice(2));
-        //                 //document.querySelector(`#box${param1}${param2}`).textContent = "";
-        //                 openZeros(x,y)    
-        //             }
-        //     }
-    } if ((x >= 0 && x < arr.length) && (y-1 >= 0 && y-1 < arr.length)) {
-        let left = {x:x, y:y-1};
-        let param1 = x;
-        let param2= y-1;
-        if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
+} if ((x >= 0 && x < arr.length) && (y-1 >= 0 && y-1 < arr.length)) {
+    let left = {x:x, y:y-1};
+    let param1 = x;
+    let param2= y-1;
+    if (!(document.querySelector(`#box${param1}-${param2}`).style.backgroundColor === 'white')) {
         toOpen.push(left);
     }
-        //     if (document.querySelector(`#box${x}${y-1}`).textContent === '0') {
-        //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
-        //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
-        //             let x = parseInt(place[0]);
-        //             let y = parseInt(place[1]);
-        //             //document.querySelector(`#box${param1}${param2}`).textContent = "";
-        //              openZeros(x,y);     
-        //             } else {
-        //                 let place = document.querySelector(`#box${param1}${param}`).id.replace( /^\D+/g, '');
-        //                 let x = parseInt(place.slice(0,2));
-        //                 let y = parseInt(place.slice(2));
-        //                 //document.querySelector(`#box${param1}${param2}`).textContent = "";
-        //                 openZeros(x,y)    
-        //             }
-        //     }
-    } if ((x+1 >= 0 && x+1 < arr.length) && (y-1 >= 0 && y-1 < arr.length)) {
-        let bottomLeft = {x:x+1,y:y-1};
-        let param1 = x+1;
-        let param2= y-1;
-        if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
-            toOpen.push(bottomLeft);
+} if ((x+1 >= 0 && x+1 < arr.length) && (y-1 >= 0 && y-1 < arr.length)) {
+    let bottomLeft = {x:x+1,y:y-1};
+    let param1 = x+1;
+    let param2= y-1;
+    if (!(document.querySelector(`#box${param1}-${param2}`).style.backgroundColor === 'white')) {
+        toOpen.push(bottomLeft);
         }
-        //     if (document.querySelector(`#box${x+1}${y-1}`).textContent === '0') {
-        //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
-        //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
-        //             let x = parseInt(place[0]);
-        //             let y = parseInt(place[1]);
-        //             //document.querySelector(`#box${param1}${param2}`).textContent = "";
-        //              openZeros(x,y);     
-        //             } else {
-        //                 let place = document.querySelector(`#box${param1}${param}`).id.replace( /^\D+/g, '');
-        //                 let x = parseInt(place.slice(0,2));
-        //                 let y = parseInt(place.slice(2));
-        //                 //document.querySelector(`#box${param1}${param2}`).textContent = "";
-        //                 openZeros(x,y)    
-        //             }
-        //     }
     } if ((x-1 >= 0 && x-1 < arr.length) && (y >= 0 && y < arr.length)) {
         let topCenter = {x:x-1, y:y};
         let param1 = x-1;
         let param2= y;
-        if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
-        toOpen.push(topCenter);
+        if (!(document.querySelector(`#box${param1}-${param2}`).style.backgroundColor === 'white')) {
+            toOpen.push(topCenter);
     }
-        //     if (document.querySelector(`#box${x-1}${y}`).textContent === '0') {
-        //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
-        //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
-        //             let x = parseInt(place[0]);
-        //             let y = parseInt(place[1]);
-        //             //document.querySelector(`#box${param1}${param2}`).textContent = "";
-        //              openZeros(x,y);     
-        //             } else {
-        //                 let place = document.querySelector(`#box${param1}${param}`).id.replace( /^\D+/g, '');
-        //                 let x = parseInt(place.slice(0,2));
-        //                 let y = parseInt(place.slice(2));
-        //                 //document.querySelector(`#box${param1}${param2}`).textContent = "";
-        //                 openZeros(x,y)    
-        //             }
-        //     }
-    } if ((x+1 >= 0 && x+1 < arr.length) && (y >= 0 && y < arr.length)) {
+} if ((x+1 >= 0 && x+1 < arr.length) && (y >= 0 && y < arr.length)) {
         let bottomCenter = {x:x+1, y:y};
         let param1 = x+1;
         let param2= y;
-        if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
-        toOpen.push(bottomCenter);
-    }
-        //     if (document.querySelector(`#box${x+1}${y}`).textContent === '0') {
-        //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
-        //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
-        //             let x = parseInt(place[0]);
-        //             let y = parseInt(place[1]);
-        //             //document.querySelector(`#box${param1}${param2}`).textContent = "";
-        //              openZeros(x,y);     
-        //             } else {
-        //                 let place = document.querySelector(`#box${param1}${param2}`).id.replace( /^\D+/g, '');
-        //                 let x = parseInt(place.slice(0,2));
-        //                 let y = parseInt(place.slice(2));
-        //                 //document.querySelector(`#box${param1}${param2}`).textContent = "";
-        //                 openZeros(x,y)    
-        //             }
-        //     }
+        if (!(document.querySelector(`#box${param1}-${param2}`).style.backgroundColor === 'white')) {
+            toOpen.push(bottomCenter);
+        }
     } if ((x-1 >= 0 && x-1 < arr.length) && (y+1 >= 0 && y+1 < arr.length)) {
         let topRight = {x:x-1, y:y+1};
         let param1 = x-1;
         let param2= y+1;
-        if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
-        toOpen.push(topRight);
-    }
-        //     if (document.querySelector(`#box${x-1}${y+1}`).textContent === '0') {
-        //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
-        //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
-        //             let x = parseInt(place[0]);
-        //             let y = parseInt(place[1]);
-        //             //document.querySelector(`#box${param1}${param2}`).textContent = "";
-        //              openZeros(x,y);     
-        //             } else {
-        //                 let place = document.querySelector(`#box${param1}${param}`).id.replace( /^\D+/g, '');
-        //                 let x = parseInt(place.slice(0,2));
-        //                 let y = parseInt(place.slice(2));
-        //                 //document.querySelector(`#box${param1}${param2}`).textContent = "";
-        //                 openZeros(x,y)    
-        //             }
-        //     }
+        if (!(document.querySelector(`#box${param1}-${param2}`).style.backgroundColor === 'white')) {
+            toOpen.push(topRight);
+        }
     } if ((x >= 0 && x < arr.length) && (y+1 >= 0 && y+1 < arr.length)) {
         let right = {x:x, y:y+1};
         let param1 = x;
         let param2= y+1;
-        if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
-        toOpen.push(right);
-    }
-        //     if (document.querySelector(`#box${x}${y+1}`).textContent === '0') {
-        //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
-        //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
-        //             let x = parseInt(place[0]);
-        //             let y = parseInt(place[1]);
-        //             //document.querySelector(`#box${param1}${param2}`).textContent = "";
-        //              openZeros(x,y);     
-        //             } else {
-        //                 let place = document.querySelector(`#box${param1}${param}`).id.replace( /^\D+/g, '');
-        //                 let x = parseInt(place.slice(0,2));
-        //                 let y = parseInt(place.slice(2));
-        //                 //document.querySelector(`#box${param1}${param2}`).textContent = "";
-        //                 openZeros(x,y)    
-        //             }
-        //     }
+        if (!(document.querySelector(`#box${param1}-${param2}`).style.backgroundColor === 'white')) {
+            toOpen.push(right);
+        }
     } if ((x+1 >= 0 && x+1 < arr.length) && (y+1 >= 0 && y+1 < arr.length)) {
         let bottomRight = {x:x+1, y:y+1};
         let param1 = x+1;
         let param2= y+1;
-        if (!(document.querySelector(`#box${param1}${param2}`).style.backgroundColor === 'white')) {
+        if (!(document.querySelector(`#box${param1}-${param2}`).style.backgroundColor === 'white')) {
         toOpen.push(bottomRight);
-        }
-        //     if (document.querySelector(`#box${x+1}${y+1}`).textContent === '0') {
-        //         if (document.querySelector(`#box${param1}${param2}`).id.length === 5) {
-        //             let place = document.querySelector(`#box${param1}${param2}`).id.match(/\d/g);
-        //             let x = parseInt(place[0]);
-        //             let y = parseInt(place[1]);
-        //             //document.querySelector(`#box${param1}${param2}`).textContent = "";
-        //              openZeros(x,y);     
-        //             } else {
-        //                 let place = document.querySelector(`#box${param1}${param2}`).id.replace( /^\D+/g, '');
-        //                 let x = parseInt(place.slice(0,2));
-        //                 let y = parseInt(place.slice(2));
-        //                 //document.querySelector(`#box${param1}${param2}`).textContent = "";
-        //                 openZeros(x,y)    
-        //             }
-        //     }
+    }
     return toOpen;
 }
 }
