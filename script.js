@@ -140,6 +140,7 @@ function revealBombs () {
 }
 
 //Function to reveal the box when clicked
+let w = 0;
 function revealBox(e) {
     if (e.target.className.includes('box bomb') && !(e.target.getAttribute('data-num') === "1")) {
         e.target.style.objectPosition = '0';
@@ -148,9 +149,13 @@ function revealBox(e) {
         document.querySelector('body').removeEventListener('contextmenu',rightClick);
         document.querySelector('h2').textContent = `Game Over`;
     } if (e.target.className === 'box' && !(e.target.getAttribute('data-num') === "1")) {
+        w+=1;
         e.target.style.fontSize = '35px';
         e.target.style.backgroundColor = 'white';
         e.target.setAttribute('data-num', 0);
+        if (w === n - bombNumber) {
+            document.querySelector('h2').textContent = `Congrats You WIN!!`;
+        }
     }
 }
 //Function to freeze box if right-clicked and unfreeze if right-clicked again
@@ -167,12 +172,12 @@ function rightClick(e) {
         console.log(e.target.getAttribute('data-num'));
     }
 }
-document.querySelector('#container').addEventListener('contextmenu',rightClick);
 
 document.querySelector('h2').textContent = `Bombs: ${bombNumber}`;
 
 //Resets the game to correct level
 function resetGame() {
+    w = 0;
     n = 0;
     buildBoard(rows, columns);
     arr = [];
@@ -186,32 +191,34 @@ function resetGame() {
     }
     placeBombs(bombNumber, rows, columns);
     bombNeighbors();
-        for (let i = 0; i<arr.length;i+=1) {
-            for (let j = 0;j<arr[i].length; j+=1) {
-                if (!(arr[i][j] === 'bomb')) {
-                    document.querySelector(`#box${i}${j}`).textContent += arr[i][j];
-                    }
-                }
-            }
-            document.querySelector('h2').textContent = `Bombs: ${bombNumber}`;
-            document.querySelector('#container').addEventListener('click',revealBox);
-            document.querySelector('body').addEventListener('contextmenu',rightClick);
-        }
-        
-        function removeBoard(rows) {
-            for (let i = rows-1; i >= 0; i-=1 ) {
-                document.querySelector(`#container`).removeChild(document.querySelector(`#container`).childNodes[i])
+    for (let i = 0; i<arr.length;i+=1) {
+        for (let j = 0;j<arr[i].length; j+=1) {
+            if (!(arr[i][j] === 'bomb')) {
+                document.querySelector(`#box${i}${j}`).textContent += arr[i][j];
             }
         }
     }
-    
+    document.querySelector('h2').textContent = `Bombs: ${bombNumber}`;
     document.querySelector('#container').addEventListener('click',revealBox);
+    document.querySelector('body').addEventListener('contextmenu',rightClick);
+}
+
+function removeBoard(rows) {
+    for (let i = rows-1; i >= 0; i-=1 ) {
+        document.querySelector(`#container`).removeChild(document.querySelector(`#container`).childNodes[i])
+    }
+}
+}
+
+document.querySelector('#container').addEventListener('contextmenu',rightClick);
+document.querySelector('#container').addEventListener('click',revealBox);
 
 
-
+//How to build function to open if 0
 //var txt = document.querySelector('#box40').id
 // var numb = txt.match(/\d/g);
 // numb = numb.join(""); splt = numb.split(""); splt[0]
 // "4"
 // if document.querySelector('#box40').textContent === 0 then get x,y and search for and open all neighbors
 //Option above to get x,y (take box id and get x,y from there and plug into function which will open all found neighbors)
+//Somehow make it recursive so if any other boxes opened by the function have a 0 it will open all their neighbors
