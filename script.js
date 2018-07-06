@@ -176,11 +176,8 @@ function revealBox(e) {
                 e.target.style.backgroundColor = 'white';
                 e.target.setAttribute('data-num', 0);
             }
-        // e.target.style.fontSize = '35px';
-        // e.target.style.backgroundColor = 'white';
-        // e.target.setAttribute('data-num', 0);
         if (w === n - bombNumber) {
-            document.querySelector('h2').textContent = `Congrats You WIN!!`;
+            document.querySelector('h2').textContent = `Mission Successful`;
         }
     }
 }
@@ -190,16 +187,14 @@ function rightClick(e) {
         e.preventDefault();
         e.target.style.backgroundColor = 'green';
         e.target.setAttribute('data-num', 1);
-        console.log(e.target.getAttribute('data-num'));
     } else if (e.target.className.includes('box') && e.target.getAttribute('data-num') === "1") {
         e.preventDefault();
         e.target.style.backgroundColor = 'lightgrey';
         e.target.setAttribute('data-num', 2);
-        console.log(e.target.getAttribute('data-num'));
     }
 }
 
-document.querySelector('h2').textContent = `Bombs: ${bombNumber}`;
+document.querySelector('h2').textContent = `Beware: ${bombNumber} Bombs`;
 
 function removeBoard(rows) {
     for (let i = rows-1; i >= 0; i-=1 ) {
@@ -230,7 +225,7 @@ function resetGame() {
             }
         }
     }
-    document.querySelector('h2').textContent = `Bombs: ${bombNumber}`;
+    document.querySelector('h2').textContent = `Beware: ${bombNumber} Bombs`;
     document.querySelector('#container').addEventListener('click',revealBox);
 }
 
