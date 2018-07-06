@@ -43,7 +43,7 @@ span {
     margin-right: -4px;
     border-radius: 16%;
     font-size: 17px;
-    font-family: 'Stardos Stencil', cursive;
+    font-family: 'Allerta Stencil', sans-serif;
 }
 
 #container {
@@ -56,25 +56,33 @@ span {
     display: inline-block;
     height: 250px;
     width: 250px;
+    visibility: hidden;
+    margin: auto 0;
+}
+#bomb1 {
+    display: inline-block;
+    height: 250px;
+    width: 250px;
+    visibility: hidden;
+    margin: 0 auto;
 }
 
 .box {
-    height: 35px;
-    width: 35px;
-    border: black solid 1px;
+    height: 33px;
+    width: 33px;
+    border: darkgray outset 2px;
     display: inline-block;
     vertical-align: top;
     font-size: 0px;
-    background-color: gray;
-    perspective: 500rem;
+    background-color: grey;
 }
 
 div .bomb {
     content: url("https://lh3.googleusercontent.com/F6o_idIUUbCs-6qkn9WRDoBNArm9eUyLNgA-mDS5u7ofbQNkrKZmaeoPcQlX-kMQWlH9bCh4e3wES7shwyfiTGfTlrpyNDHzmCjl14pKYvax59yhgwc_aQvQfQPLl9T0gdtnfgMADKzmpzyiKTpKplJ3lu2zEkSZEgP67SFimvrFpxdXuSl2wgxrPxAI7z-a8TuMj8MchWk71_EmB9ehX-tqoaLT5_6BICS6VsSqhqsMFP0reB__Uibk-20uzVq5olwOYsApyHH7P9H0dBcgfVRw011Gt0kR_1dItUya3xmUbuhih0ihPQMTupHm8pPrIZx4lUhO31GLmgLYKJpZNZdS1niBN4-MmvggEnAzBJSgrIRpC48uXvwhhCHHNWSoT8Z3se5uONPA7Og7az9yH7q3Cdnjv4sNQUrcJr9nZyTpU_OQUtizxoM-JILtVbg7wzw2cMStFBIYOdZZ0DS3sL1APZM0tOBLNqmmfgSER6elnkJawroE_TyYl30NmiBYCkWPD8XVLV9XmaN3Hiw9wm-ZgtoN3ez8KQlCKC2YwEsSK5j0WqQFnWOkgJFm26PP0vTtujF1_NPZCA76EKDJZZwgkGTmr3H0uxZwCJM=s50-no");
-    height: 35px;
-    width: 35px;
+    height: 33px;
+    width: 33px;
     content: 0px; 
-    background-color: gray;
+    background-color: grey;
     object-position: -99999px 99999px;
 }
 
