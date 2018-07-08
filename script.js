@@ -2,10 +2,9 @@
 let bombNumber = 10;
 let rows = 8;
 let columns = 8;
-document.querySelector('h2').textContent = `Beware: ${bombNumber} Bombs`;
-let w = 0;
+let openedCells = 0;
 //Builds Board to custom size
-let n = 0;
+let totalCells = 0;
 function buildBoard(rows, columns) {
     for (let j = 0; j< columns; j += 1) {
         let newColumn = document.createElement('div');
@@ -15,9 +14,9 @@ function buildBoard(rows, columns) {
             let div = document.createElement('div');
             div.className = 'box';
             div.id = `box${j}-${i}`;
-            div.setAttribute('data-num', 2);
+            div.setAttribute('data-flagged', 2);
             document.querySelector(`#Row${j}`).appendChild(div);
-            n+=1;
+            totalCells+=1;
         }
     }
 }
@@ -100,6 +99,7 @@ function setupGame () {
     placeBombs(bombNumber,rows,columns);
     bombNeighbors();
     renderBombs(arr);
+    document.querySelector('h2').textContent = `Beware: ${bombNumber} Bombs`;
 }
 setupGame();
 //Reveals all other bombs on board if you click on a bomb                    
@@ -109,7 +109,7 @@ function revealBombs () {
 }
 //Function to reveal the box when clicked
 function revealBox(e) {
-    if (e.target.className.includes('box bomb') && !(e.target.getAttribute('data-num') === "1")) {
+    if (e.target.className.includes('box bomb') && !(e.target.getAttribute('data-flagged') === "1")) {
         e.target.style.objectPosition = '0';
         revealBombs();
         document.querySelector('body').removeEventListener('contextmenu',rightClick);
@@ -117,7 +117,7 @@ function revealBox(e) {
         document.querySelector('h2').textContent = `Game Over`;
         document.querySelector('#bomb').style.visibility = 'visible';
         document.querySelector('#bomb1').style.visibility = 'visible';
-    } if (e.target.className === 'box' && !(e.target.getAttribute('data-num') === "1")) {
+    } if (e.target.className === 'box' && !(e.target.getAttribute('data-flagged') === "1")) {
             if (e.target.textContent === '0') {
                 if (e.target.id.length === 5) {
                     let place = e.target.id.match(/\d/g);
@@ -133,17 +133,21 @@ function revealBox(e) {
                     openRest();
                 }
             } if (!(e.target.style.backgroundColor === 'white')) {
-                w+=1;
+                openedCells+=1;
             } if (e.target.textContent === '0'){
                 e.target.style.backgroundColor = 'white';
-                e.target.setAttribute('data-num', 0);
+                e.target.setAttribute('data-flagged', 0);
             } else {
                 e.target.style.fontSize = '35px';
                 e.target.style.backgroundColor = 'white';
-                e.target.setAttribute('data-num', 0);
+                e.target.setAttribute('data-flagged', 0);
             }
-        if (w === n - bombNumber) {
+        if (openedCells === totalCells - bombNumber) {
             document.querySelector('h2').textContent = `Mission Accomplished`;
+            document.querySelector('#bomb').style.visibility = 'visible';
+            document.querySelector('#bomb1').style.visibility = 'visible';
+            document.querySelector('#bomb').src = 'https://media.giphy.com/media/13n4Hd98ewKJsQ/giphy.gif';
+            document.querySelector('#bomb1').src = 'https://media.giphy.com/media/13n4Hd98ewKJsQ/giphy.gif'
             document.querySelector('#container').removeEventListener('click',revealBox);
             document.querySelector('body').removeEventListener('contextmenu',rightClick);
         }
@@ -151,14 +155,15 @@ function revealBox(e) {
 }
 //Function to freeze box if right-clicked and unfreeze if right-clicked again
 function rightClick(e) {
-    if (e.target.className.includes('box') && !(e.target.getAttribute('data-num') === "1") && !(e.target.getAttribute('data-num') === "0") ) {
+    debugger;
+    if (e.target.className.includes('box') && !(e.target.getAttribute('data-flagged') === "1") && !(e.target.getAttribute('data-flagged') === "0") ) {
         e.preventDefault();
         e.target.style.backgroundColor = 'green';
-        e.target.setAttribute('data-num', 1);
-    } else if (e.target.className.includes('box') && e.target.getAttribute('data-num') === "1") {
+        e.target.setAttribute('data-flagged', 1);
+    } else if (e.target.className.includes('box') && e.target.getAttribute('data-flagged') === "1") {
         e.preventDefault();
         e.target.style.backgroundColor = 'grey';
-        e.target.setAttribute('data-num', 2);
+        e.target.setAttribute('data-flagged', 2);
     }
 }
 
@@ -171,13 +176,15 @@ function removeBoard(rows) {
 
 //Resets the game to correct level
 function resetGame() {
-    w = 0;
-    n = 0;
+    openedCells = 0;
+    totalCells = 0;
     k = 0;
     arr = [];
     alreadyThere = [];
     setupGame();
     document.querySelector('h2').textContent = `Beware: ${bombNumber} Bombs`;
+    document.querySelector('#bomb').src = 'https://media.giphy.com/media/X92pmIty2ZJp6/giphy.gif';
+    document.querySelector('#bomb1').src = 'https://media.giphy.com/media/X92pmIty2ZJp6/giphy.gif'
     document.querySelector('#bomb').style.visibility = 'hidden';
     document.querySelector('#bomb1').style.visibility = 'hidden';
     document.querySelector('#container').addEventListener('click',revealBox);
@@ -254,7 +261,7 @@ function openZeros(x,y) {
 function openRest() {
     for (let i = 0;i < toOpen.length;i+=0) {
         if (!(document.querySelector(`#box${toOpen[i].x}-${toOpen[i].y}`).style.backgroundColor === 'white')) {
-            w+=1;
+            openedCells+=1;
         }
         if (document.querySelector(`#box${toOpen[i].x}-${toOpen[i].y}`).textContent === '0'){
             openZeros(toOpen[i].x,toOpen[i].y)
@@ -270,27 +277,27 @@ function openRest() {
 }
 //Retreives the value from menu and resets game to correct level
 let formValue = document.querySelector('.form').value;
-function amtrc() {
+function boardSize() {
     debugger;
-    if (formValue === 'easy') {
+    if (document.querySelector('.form').value === 'easy') {
         removeBoard(rows);
         rows = 8
         columns = 8
         bombNumber = 10
         resetGame();
-    } else if (formValue === 'medium') {
+    } else if (document.querySelector('.form').value === 'medium') {
         removeBoard(rows);
         rows = 10
         columns = 10
         bombNumber = 18
         resetGame();
-    } else if (formValue === 'hard') {
+    } else if (document.querySelector('.form').value === 'hard') {
         removeBoard(rows);
         rows = 12
         columns = 12
-        bombNumber = 24
+        bombNumber = 30
         resetGame();
     }
 }
 //Adds click ability to Restart Game button
-document.querySelector('#submit').addEventListener('click',amtrc);
+document.querySelector('#submit').addEventListener('click',boardSize);
