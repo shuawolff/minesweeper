@@ -3,8 +3,8 @@ let bombNumber = 10;
 let rows = 8;
 let columns = 8;
 let openedCells = 0;
-//Builds Board to custom size
 let totalCells = 0;
+//Builds Board to custom size
 function buildBoard(rows, columns) {
     for (let j = 0; j< columns; j += 1) {
         let newColumn = document.createElement('div');
@@ -13,7 +13,7 @@ function buildBoard(rows, columns) {
         for (let i = 0; i < rows; i += 1 ) {
             let div = document.createElement('div');
             div.className = 'box';
-            div.id = `box${j}-${i}`;
+            div.setAttribute('data-num', `${j}-${i}`);
             div.setAttribute('data-flagged', 2);
             document.querySelector(`#Row${j}`).appendChild(div);
             totalCells+=1;
@@ -46,7 +46,8 @@ function placeBombs(num, rows, columns) {
             i-=1;
         }
         alreadyThere.push(`${random}-${random2}`);
-        document.querySelector(`#box${random}-${random2}`).className += ' bomb';
+        //document.getAttribute('data-num',`${random}-${random2}`).className += ' bomb';
+        document.querySelector(`[data-num = '${random}-${random2}']`).className += ' bomb';
         arr[random][random2] = 'bomb';
     }
 }
@@ -86,7 +87,7 @@ function renderBombs (arr){
     for (let i = 0; i<arr.length; i += 1) {
         for (let j = 0;j<arr[i].length; j += 1) {
         if (!(arr[i][j] === 'bomb')) {
-        document.querySelector(`#box${i}-${j}`).textContent += arr[i][j];
+        document.querySelector(`[data-num = '${i}-${j}']`).textContent += arr[i][j];
             }
         }
     }
@@ -119,16 +120,16 @@ function revealBox(e) {
         document.querySelector('#bomb1').style.visibility = 'visible';
     } if (e.target.className === 'box' && !(e.target.getAttribute('data-flagged') === "1")) {
             if (e.target.textContent === '0') {
-                if (e.target.id.length === 5) {
-                    let place = e.target.id.match(/\d/g);
+                if (e.target.getAttribute('data-num').length === 3) {
+                    let place = e.target.getAttribute('data-num').match(/\d/g);
                     let x = parseInt(place[0]);
                     let y = parseInt(place[1]);
                     openZeros(x,y);
                     openRest();     
                 } else {
-                    let place = e.target.id.replace( /^\D+/g, '');
+                    let place = e.target.getAttribute('data-num').replace( /^\D+/g, '');
                     let x = parseInt(place.slice(0,2));
-                    let y = parseInt(place.slice(2));
+                    let y = Math.abs(parseInt(place.slice(2)));
                     openZeros(x,y)
                     openRest();
                 }
@@ -155,7 +156,6 @@ function revealBox(e) {
 }
 //Function to freeze box if right-clicked and unfreeze if right-clicked again
 function rightClick(e) {
-    debugger;
     if (e.target.className.includes('box') && !(e.target.getAttribute('data-flagged') === "1") && !(e.target.getAttribute('data-flagged') === "0") ) {
         e.preventDefault();
         e.target.style.backgroundColor = 'green';
@@ -202,56 +202,56 @@ function openZeros(x,y) {
         let topLeft = {x:x-1, y:y-1};
         let param1 = x-1;
         let param2 = y-1;
-        if (!(document.querySelector(`#box${param1}-${param2}`).style.backgroundColor === 'white')) {
+        if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
             toOpen.push(topLeft);
         }
     } if ((x >= 0 && x < arr.length) && (y-1 >= 0 && y-1 < arr.length)) {
         let left = {x:x, y:y-1};
         let param1 = x;
         let param2= y-1;
-        if (!(document.querySelector(`#box${param1}-${param2}`).style.backgroundColor === 'white')) {
+        if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
             toOpen.push(left);
         }
     } if ((x+1 >= 0 && x+1 < arr.length) && (y-1 >= 0 && y-1 < arr.length)) {
         let bottomLeft = {x:x+1,y:y-1};
         let param1 = x+1;
         let param2= y-1;
-        if (!(document.querySelector(`#box${param1}-${param2}`).style.backgroundColor === 'white')) {
+        if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
             toOpen.push(bottomLeft);
         }
     } if ((x-1 >= 0 && x-1 < arr.length) && (y >= 0 && y < arr.length)) {
         let topCenter = {x:x-1, y:y};
         let param1 = x-1;
         let param2= y;
-        if (!(document.querySelector(`#box${param1}-${param2}`).style.backgroundColor === 'white')) {
+        if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
             toOpen.push(topCenter);
         }
     } if ((x+1 >= 0 && x+1 < arr.length) && (y >= 0 && y < arr.length)) {
         let bottomCenter = {x:x+1, y:y};
         let param1 = x+1;
         let param2= y;
-        if (!(document.querySelector(`#box${param1}-${param2}`).style.backgroundColor === 'white')) {
+        if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
             toOpen.push(bottomCenter);
         }
     } if ((x-1 >= 0 && x-1 < arr.length) && (y+1 >= 0 && y+1 < arr.length)) {
         let topRight = {x:x-1, y:y+1};
         let param1 = x-1;
         let param2= y+1;
-        if (!(document.querySelector(`#box${param1}-${param2}`).style.backgroundColor === 'white')) {
+        if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
             toOpen.push(topRight);
         }
     } if ((x >= 0 && x < arr.length) && (y+1 >= 0 && y+1 < arr.length)) {
         let right = {x:x, y:y+1};
         let param1 = x;
         let param2= y+1;
-        if (!(document.querySelector(`#box${param1}-${param2}`).style.backgroundColor === 'white')) {
+        if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
             toOpen.push(right);
         }
     } if ((x+1 >= 0 && x+1 < arr.length) && (y+1 >= 0 && y+1 < arr.length)) {
         let bottomRight = {x:x+1, y:y+1};
         let param1 = x+1;
         let param2= y+1;
-        if (!(document.querySelector(`#box${param1}-${param2}`).style.backgroundColor === 'white')) {
+        if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
             toOpen.push(bottomRight);
         }
         return toOpen;
@@ -260,17 +260,17 @@ function openZeros(x,y) {
 //Opens all the surrounding neighbors from array and reruns the toOpen function if one of the newly opened is a 0
 function openRest() {
     for (let i = 0;i < toOpen.length;i+=0) {
-        if (!(document.querySelector(`#box${toOpen[i].x}-${toOpen[i].y}`).style.backgroundColor === 'white')) {
+        if (!(document.querySelector(`[data-num = '${toOpen[i].x}-${toOpen[i].y}']`).style.backgroundColor === 'white')) {
             openedCells+=1;
         }
-        if (document.querySelector(`#box${toOpen[i].x}-${toOpen[i].y}`).textContent === '0'){
+        if (document.querySelector(`[data-num = '${toOpen[i].x}-${toOpen[i].y}']`).textContent === '0'){
             openZeros(toOpen[i].x,toOpen[i].y)
-            document.querySelector(`#box${toOpen[i].x}-${toOpen[i].y}`).style.backgroundColor = 'white';
-            document.querySelector(`#box${toOpen[i].x}-${toOpen[i].y}`).setAttribute('data-num', 0);
+            document.querySelector(`[data-num = '${toOpen[i].x}-${toOpen[i].y}']`).style.backgroundColor = 'white';
+            document.querySelector(`[data-num = '${toOpen[i].x}-${toOpen[i].y}']`).setAttribute('data-flagged', 0);
         } else {
-            document.querySelector(`#box${toOpen[i].x}-${toOpen[i].y}`).style.fontSize = '35px';
-            document.querySelector(`#box${toOpen[i].x}-${toOpen[i].y}`).style.backgroundColor = 'white';
-            document.querySelector(`#box${toOpen[i].x}-${toOpen[i].y}`).setAttribute('data-num', 0);
+            document.querySelector(`[data-num = '${toOpen[i].x}-${toOpen[i].y}']`).style.fontSize = '35px';
+            document.querySelector(`[data-num = '${toOpen[i].x}-${toOpen[i].y}']`).style.backgroundColor = 'white';
+            document.querySelector(`[data-num = '${toOpen[i].x}-${toOpen[i].y}']`).setAttribute('data-flagged', 0);
         }
         toOpen.shift();
     }
@@ -278,7 +278,6 @@ function openRest() {
 //Retreives the value from menu and resets game to correct level
 let formValue = document.querySelector('.form').value;
 function boardSize() {
-    debugger;
     if (document.querySelector('.form').value === 'easy') {
         removeBoard(rows);
         rows = 8
