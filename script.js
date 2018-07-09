@@ -4,6 +4,7 @@ let rows = 8;
 let columns = 8;
 let openedCells = 0;
 let totalCells = 0;
+let neighborsCheck = [{x:-1, y:-1},{x:0, y:-1},{x:+1,y:-1},{x:-1, y:0},{x:+1, y:0},{x:-1, y:+1},{x:0, y:+1},{x:+1, y:+1}];
 //Builds Board to custom size
 function buildBoard(rows, columns) {
     for (let j = 0; j< columns; j += 1) {
@@ -35,6 +36,7 @@ function setZero (arr) {
             arr[i][j] = 0;
         }
     }
+
 }
 // Randomly places bombs in gameboard and arrays
 function placeBombs(num, rows, columns) {
@@ -53,22 +55,10 @@ function placeBombs(num, rows, columns) {
 //Checks all neighbors of specific divs and makes sure they are not off board
 //If the neighbor of the bomb is on board it then adds 1 for each
 function findNeighbors(x,y) {
-    if ((x-1 >= 0 && x-1 < arr.length) && (y-1 >= 0 && y-1 < arr.length) && (!(arr[x-1][y-1] === 'bomb'))) {
-        arr[x-1][y-1] += 1;
-    } if ((x >= 0 && x < arr.length) && (y-1 >= 0 && y-1 < arr.length) && (!(arr[x][y-1] === 'bomb'))) {
-        arr[x][y-1] += 1;
-    } if ((x+1 >= 0 && x+1 < arr.length) && (y-1 >= 0 && y-1 < arr.length) && (!(arr[x+1][y-1] === 'bomb'))) {
-        arr[x+1][y-1] += 1
-    } if ((x-1 >= 0 && x-1 < arr.length) && (y >= 0 && y < arr.length) && (!(arr[x-1][y] === 'bomb'))) {
-        arr[x-1][y] += 1;
-    } if ((x+1 >= 0 && x+1 < arr.length) && (y >= 0 && y < arr.length) && (!(arr[x+1][y] === 'bomb'))) {
-        arr[x+1][y] += 1;
-    } if ((x-1 >= 0 && x-1 < arr.length) && (y+1 >= 0 && y+1 < arr.length) && (!(arr[x-1][y+1] === 'bomb'))) {
-        arr[x-1][y+1] += 1;
-    } if ((x >= 0 && x < arr.length) && (y+1 >= 0 && y+1 < arr.length) && (!(arr[x][y+1] === 'bomb'))) {
-        arr[x][y+1] += 1;
-    } if ((x+1 >= 0 && x+1 < arr.length) && (y+1 >= 0 && y+1 < arr.length) && (!(arr[x+1][y+1] === 'bomb'))) {
-        arr[x+1][y+1] += 1;
+    for (let i = 0; i < neighborsCheck.length; i += 1) {
+        if ((x + neighborsCheck[i].x >= 0 && x + neighborsCheck[i].x < arr.length) && (y + neighborsCheck[i].y >= 0 && y + neighborsCheck[i].y < arr.length) && (!(arr[x + neighborsCheck[i].x][y + neighborsCheck[i].y] === 'bomb'))) {
+        arr[x + neighborsCheck[i].x][y + neighborsCheck[i].y] += 1;
+        }
     }
 }
 //Used findNeighbors function to calculate number of bombs each space is touching
@@ -115,7 +105,6 @@ function revealBox(e) {
         document.querySelector('body').removeEventListener('contextmenu',rightClick);
         document.querySelector('#container').removeEventListener('click',revealBox);
         document.querySelector('h2').textContent = `Game Over`;
-        debugger;
         document.querySelector('#bomb').style.visibility = 'visible';
         document.querySelector('#bomb1').style.visibility = 'visible';
     } if (e.target.className === 'box' && !(e.target.getAttribute('data-flagged') === "1")) {
@@ -145,7 +134,6 @@ function revealBox(e) {
             }
         if (openedCells === totalCells - bombNumber) {
             document.querySelector('h2').textContent = `Mission Accomplished`;
-            debugger;
             document.querySelector('#bomb').src = 'https://media.giphy.com/media/13n4Hd98ewKJsQ/giphy.gif';
             document.querySelector('#bomb1').src = 'https://media.giphy.com/media/13n4Hd98ewKJsQ/giphy.gif';
             document.querySelector('#bomb').style.visibility = 'visible';
@@ -199,65 +187,18 @@ document.querySelector('#container').addEventListener('click',revealBox);
 //Calculates all surrounding neighbors and if they haven't already been cicked they get added to an array
 let toOpen = [];
 function openZeros(x,y) {
-    if ((x-1 >= 0 && x-1 < arr.length) && (y-1 >= 0 && y-1 < arr.length)) {
-        let topLeft = {x:x-1, y:y-1};
-        let param1 = x-1;
-        let param2 = y-1;
-        if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
-            toOpen.push(topLeft);
+    for (let i = 0; i < neighborsCheck.length; i += 1) {
+        if ((x + neighborsCheck[i].x >= 0 && x + neighborsCheck[i].x < arr.length) && (y + neighborsCheck[i].y >= 0 && y + neighborsCheck[i].y < arr.length)) {
+            let location = {x:x + neighborsCheck[i].x, y:y + neighborsCheck[i].y};
+            let param1 = x + neighborsCheck[i].x
+            let param2 = y + neighborsCheck[i].y
+            if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
+                toOpen.push(location);
         }
-    } if ((x >= 0 && x < arr.length) && (y-1 >= 0 && y-1 < arr.length)) {
-        let left = {x:x, y:y-1};
-        let param1 = x;
-        let param2= y-1;
-        if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
-            toOpen.push(left);
-        }
-    } if ((x+1 >= 0 && x+1 < arr.length) && (y-1 >= 0 && y-1 < arr.length)) {
-        let bottomLeft = {x:x+1,y:y-1};
-        let param1 = x+1;
-        let param2= y-1;
-        if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
-            toOpen.push(bottomLeft);
-        }
-    } if ((x-1 >= 0 && x-1 < arr.length) && (y >= 0 && y < arr.length)) {
-        let topCenter = {x:x-1, y:y};
-        let param1 = x-1;
-        let param2= y;
-        if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
-            toOpen.push(topCenter);
-        }
-    } if ((x+1 >= 0 && x+1 < arr.length) && (y >= 0 && y < arr.length)) {
-        let bottomCenter = {x:x+1, y:y};
-        let param1 = x+1;
-        let param2= y;
-        if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
-            toOpen.push(bottomCenter);
-        }
-    } if ((x-1 >= 0 && x-1 < arr.length) && (y+1 >= 0 && y+1 < arr.length)) {
-        let topRight = {x:x-1, y:y+1};
-        let param1 = x-1;
-        let param2= y+1;
-        if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
-            toOpen.push(topRight);
-        }
-    } if ((x >= 0 && x < arr.length) && (y+1 >= 0 && y+1 < arr.length)) {
-        let right = {x:x, y:y+1};
-        let param1 = x;
-        let param2= y+1;
-        if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
-            toOpen.push(right);
-        }
-    } if ((x+1 >= 0 && x+1 < arr.length) && (y+1 >= 0 && y+1 < arr.length)) {
-        let bottomRight = {x:x+1, y:y+1};
-        let param1 = x+1;
-        let param2= y+1;
-        if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
-            toOpen.push(bottomRight);
-        }
-        return toOpen;
     }
 }
+        return toOpen;
+    }
 //Opens all the surrounding neighbors from array and reruns the toOpen function if one of the newly opened is a 0
 function openRest() {
     for (let i = 0;i < toOpen.length;i+=0) {
@@ -277,21 +218,21 @@ function openRest() {
     }
 }
 //Retreives the value from menu and resets game to correct level
-let formValue = document.querySelector('.form').value;
 function boardSize() {
-    if (document.querySelector('.form').value === 'easy') {
+    let formValue = document.querySelector('.form').value;
+    if (formValue === 'easy') {
         removeBoard(rows);
         rows = 8
         columns = 8
         bombNumber = 10
         resetGame();
-    } else if (document.querySelector('.form').value === 'medium') {
+    } else if (formValue === 'medium') {
         removeBoard(rows);
         rows = 10
         columns = 10
         bombNumber = 18
         resetGame();
-    } else if (document.querySelector('.form').value === 'hard') {
+    } else if (formValue === 'hard') {
         removeBoard(rows);
         rows = 12
         columns = 12
