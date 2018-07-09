@@ -34,6 +34,7 @@ function openZeros(x,y) {
 }
         return toOpen;
     }
-    ```
+    
+```
 
 Lesson Learned: Try to break up larger functions into smaller bites which can then be used and manipulated easier.
