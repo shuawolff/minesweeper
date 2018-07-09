@@ -46,7 +46,6 @@ function placeBombs(num, rows, columns) {
             i-=1;
         }
         alreadyThere.push(`${random}-${random2}`);
-        //document.getAttribute('data-num',`${random}-${random2}`).className += ' bomb';
         document.querySelector(`[data-num = '${random}-${random2}']`).className += ' bomb';
         arr[random][random2] = 'bomb';
     }
@@ -116,6 +115,7 @@ function revealBox(e) {
         document.querySelector('body').removeEventListener('contextmenu',rightClick);
         document.querySelector('#container').removeEventListener('click',revealBox);
         document.querySelector('h2').textContent = `Game Over`;
+        debugger;
         document.querySelector('#bomb').style.visibility = 'visible';
         document.querySelector('#bomb1').style.visibility = 'visible';
     } if (e.target.className === 'box' && !(e.target.getAttribute('data-flagged') === "1")) {
@@ -145,10 +145,11 @@ function revealBox(e) {
             }
         if (openedCells === totalCells - bombNumber) {
             document.querySelector('h2').textContent = `Mission Accomplished`;
+            debugger;
+            document.querySelector('#bomb').src = 'https://media.giphy.com/media/13n4Hd98ewKJsQ/giphy.gif';
+            document.querySelector('#bomb1').src = 'https://media.giphy.com/media/13n4Hd98ewKJsQ/giphy.gif';
             document.querySelector('#bomb').style.visibility = 'visible';
             document.querySelector('#bomb1').style.visibility = 'visible';
-            document.querySelector('#bomb').src = 'https://media.giphy.com/media/13n4Hd98ewKJsQ/giphy.gif';
-            document.querySelector('#bomb1').src = 'https://media.giphy.com/media/13n4Hd98ewKJsQ/giphy.gif'
             document.querySelector('#container').removeEventListener('click',revealBox);
             document.querySelector('body').removeEventListener('contextmenu',rightClick);
         }
