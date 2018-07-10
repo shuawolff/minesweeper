@@ -2,7 +2,7 @@
 
 This is a replica of the game Minesweeper which I created using HTML, CSS and Vanilla Javascript. I've always been intrigued by the game and the logic needed to beat it. I thought it would be fun to recreate it as a project.
 
-## How to play
+### How to play
 
 When you click on a cell, if the cell is a bomb it reveals all bombs and it's Game Over. If the cell is a number that number represents how many bombs it is touching.
 
@@ -12,7 +12,7 @@ If you think the space is a bomb you can right-click to flag and freeze the cell
 
 If all the non-bomb spaces are clicked then you win.
 
-## Code Example
+### Code Example
 
 Building the algorithm to open all the boxes surrounding a 0 cell was done by using the x,y position of the cell and searching the 8 cells around it by adding or removing 1 to the x and y. The difficult part was making it continue opening cells if any of the newly opened cells were a 0. When I tried to check if the newly opened cell was 0 and then rerun the code within the same function it was flooding the callstack and freezing the game. 
 
