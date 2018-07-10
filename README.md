@@ -1,6 +1,7 @@
 # Minesweeper
 
-This is a replica of the game Minesweeper which I created using HTML, CSS and Vanilla Javascript. I've always been intrigued by the game and the logic needed to beat it. I thought it would be fun to recreate it as a project.
+![Screenshot of Game](minesweeper/Screenshot.png)
+<br>This is a replica of the game Minesweeper which I created using HTML, CSS and Vanilla Javascript. I've always been intrigued by the game and the logic needed to beat it. I thought it would be fun to recreate it as a project.
 
 ### How to play
 
