@@ -100,7 +100,6 @@ function revealBombs () {
 //Function to reveal the box when clicked
 function revealBox(e) {
     if (e.target.className.includes('box bomb') && !(e.target.getAttribute('data-flagged') === "1")) {
-        debugger
         e.target.style.objectPosition = '0';
         revealBombs();
         document.querySelector('body').removeEventListener('contextmenu',rightClick);
