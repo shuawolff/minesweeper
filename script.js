@@ -100,13 +100,16 @@ function revealBombs () {
 //Function to reveal the box when clicked
 function revealBox(e) {
     if (e.target.className.includes('box bomb') && !(e.target.getAttribute('data-flagged') === "1")) {
+        debugger
         e.target.style.objectPosition = '0';
         revealBombs();
         document.querySelector('body').removeEventListener('contextmenu',rightClick);
         document.querySelector('#container').removeEventListener('click',revealBox);
         document.querySelector('h2').textContent = `Game Over`;
-        document.querySelector('#bomb').style.visibility = 'visible';
-        document.querySelector('#bomb1').style.visibility = 'visible';
+        setTimeout(()=> {
+            document.querySelector('#bomb').style.visibility = 'visible';
+            document.querySelector('#bomb1').style.visibility = 'visible';
+        }, 150)
     } if (e.target.className === 'box' && !(e.target.getAttribute('data-flagged') === "1")) {
             if (e.target.textContent === '0') {
                 if (e.target.getAttribute('data-num').length === 3) {
@@ -136,8 +139,10 @@ function revealBox(e) {
             document.querySelector('h2').textContent = `Mission Accomplished`;
             document.querySelector('#bomb').src = 'https://media.giphy.com/media/13n4Hd98ewKJsQ/giphy.gif';
             document.querySelector('#bomb1').src = 'https://media.giphy.com/media/13n4Hd98ewKJsQ/giphy.gif';
-            document.querySelector('#bomb').style.visibility = 'visible';
-            document.querySelector('#bomb1').style.visibility = 'visible';
+            setTimeout(()=> {
+                document.querySelector('#bomb').style.visibility = 'visible';
+                document.querySelector('#bomb1').style.visibility = 'visible';
+            }, 150)
             document.querySelector('#container').removeEventListener('click',revealBox);
             document.querySelector('body').removeEventListener('contextmenu',rightClick);
         }
