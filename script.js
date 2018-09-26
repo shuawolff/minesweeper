@@ -4,35 +4,35 @@ let rows = 8;
 let columns = 8;
 let openedCells = 0;
 let totalCells = 0;
-let neighborsCheck = [{x:-1, y:-1},{x:0, y:-1},{x:+1,y:-1},{x:-1, y:0},{x:+1, y:0},{x:-1, y:+1},{x:0, y:+1},{x:+1, y:+1}];
+let neighborsCheck = [{ x: -1, y: -1 }, { x: 0, y: -1 }, { x: +1, y: -1 }, { x: -1, y: 0 }, { x: +1, y: 0 }, { x: -1, y: +1 }, { x: 0, y: +1 }, { x: +1, y: +1 }];
 //Builds Board to custom size
 function buildBoard(rows, columns) {
-    for (let j = 0; j< columns; j += 1) {
+    for (let j = 0; j < columns; j += 1) {
         let newColumn = document.createElement('div');
         newColumn.id = `Row${j}`
         document.querySelector('#container').appendChild(newColumn);
-        for (let i = 0; i < rows; i += 1 ) {
+        for (let i = 0; i < rows; i += 1) {
             let div = document.createElement('div');
             div.className = 'box';
             div.setAttribute('data-num', `${j}-${i}`);
             div.setAttribute('data-flagged', 2);
             document.querySelector(`#Row${j}`).appendChild(div);
-            totalCells+=1;
+            totalCells += 1;
         }
     }
 }
 //Build 2d Array of same size
 let arr = [];
 function buildGameArray(columns) {
-    for (let j = 0; j< columns; j += 1) {
+    for (let j = 0; j < columns; j += 1) {
         arr[j] = new Array(columns);
     }
 }
 
 //Sets array values to zero so if not close to any bomb it shows 0
-function setZero (arr) {    
-    for (let i = 0; i<arr.length; i += 1) {
-        for (let j = 0;j<arr[i].length; j += 1) {
+function setZero(arr) {
+    for (let i = 0; i < arr.length; i += 1) {
+        for (let j = 0; j < arr[i].length; j += 1) {
             arr[i][j] = 0;
         }
     }
@@ -45,7 +45,7 @@ function placeBombs(num, rows, columns) {
         let random = Math.floor(Math.random() * rows);
         let random2 = Math.floor(Math.random() * columns);
         if (alreadyThere.includes(`${random}-${random2}`)) {
-            i-=1;
+            i -= 1;
         }
         alreadyThere.push(`${random}-${random2}`);
         document.querySelector(`[data-num = '${random}-${random2}']`).className += ' bomb';
@@ -54,102 +54,102 @@ function placeBombs(num, rows, columns) {
 }
 //Checks all neighbors of specific divs and makes sure they are not off board
 //If the neighbor of the bomb is on board it then adds 1 for each
-function findNeighbors(x,y) {
+function findNeighbors(x, y) {
     for (let i = 0; i < neighborsCheck.length; i += 1) {
         if ((x + neighborsCheck[i].x >= 0 && x + neighborsCheck[i].x < arr.length) && (y + neighborsCheck[i].y >= 0 && y + neighborsCheck[i].y < arr.length) && (!(arr[x + neighborsCheck[i].x][y + neighborsCheck[i].y] === 'bomb'))) {
-        arr[x + neighborsCheck[i].x][y + neighborsCheck[i].y] += 1;
+            arr[x + neighborsCheck[i].x][y + neighborsCheck[i].y] += 1;
         }
     }
 }
 //Used findNeighbors function to calculate number of bombs each space is touching
 function bombNeighbors() {
-    for (let i = 0; i<arr.length; i += 1) {
-        for (let j = 0;j<arr[i].length; j += 1) {
+    for (let i = 0; i < arr.length; i += 1) {
+        for (let j = 0; j < arr[i].length; j += 1) {
             if (arr[i][j] === 'bomb') {
-                findNeighbors(i,j);
+                findNeighbors(i, j);
             }
         }
     }
 }
 //Prints from array to gameboard how many bombs each space is touching
-function renderBombs (arr){
-    for (let i = 0; i<arr.length; i += 1) {
-        for (let j = 0;j<arr[i].length; j += 1) {
-        if (!(arr[i][j] === 'bomb')) {
-        document.querySelector(`[data-num = '${i}-${j}']`).textContent += arr[i][j];
+function renderBombs(arr) {
+    for (let i = 0; i < arr.length; i += 1) {
+        for (let j = 0; j < arr[i].length; j += 1) {
+            if (!(arr[i][j] === 'bomb')) {
+                document.querySelector(`[data-num = '${i}-${j}']`).textContent += arr[i][j];
             }
         }
     }
 }
 
-function setupGame () {
-    buildBoard(rows,columns);
+function setupGame() {
+    buildBoard(rows, columns);
     buildGameArray(columns);
     setZero(arr);
-    placeBombs(bombNumber,rows,columns);
+    placeBombs(bombNumber, rows, columns);
     bombNeighbors();
     renderBombs(arr);
     document.querySelector('h2').textContent = `Beware: ${bombNumber} Bombs`;
 }
 setupGame();
 //Reveals all other bombs on board if you click on a bomb                    
-function revealBombs () {
-    for(i=0; i< bombNumber;i += 1)
-    document.querySelectorAll('.bomb')[i].style.objectPosition = '0';
+function revealBombs() {
+    for (i = 0; i < bombNumber; i += 1)
+        document.querySelectorAll('.bomb')[i].style.objectPosition = '0';
 }
 //Function to reveal the box when clicked
 function revealBox(e) {
     if (e.target.className.includes('box bomb') && !(e.target.getAttribute('data-flagged') === "1")) {
         e.target.style.objectPosition = '0';
         revealBombs();
-        document.querySelector('body').removeEventListener('contextmenu',rightClick);
-        document.querySelector('#container').removeEventListener('click',revealBox);
+        document.querySelector('body').removeEventListener('contextmenu', rightClick);
+        document.querySelector('#container').removeEventListener('click', revealBox);
         document.querySelector('h2').textContent = `Game Over`;
-        setTimeout(()=> {
+        setTimeout(() => {
             document.querySelector('#bomb').style.visibility = 'visible';
             document.querySelector('#bomb1').style.visibility = 'visible';
         }, 150)
     } if (e.target.className === 'box' && !(e.target.getAttribute('data-flagged') === "1")) {
-            if (e.target.textContent === '0') {
-                if (e.target.getAttribute('data-num').length === 3) {
-                    let place = e.target.getAttribute('data-num').match(/\d/g);
-                    let x = parseInt(place[0]);
-                    let y = parseInt(place[1]);
-                    openZeros(x,y);
-                    openRest();     
-                } else {
-                    let place = e.target.getAttribute('data-num').replace( /^\D+/g, '');
-                    let x = parseInt(place.slice(0,2));
-                    let y = Math.abs(parseInt(place.slice(2)));
-                    openZeros(x,y)
-                    openRest();
-                }
-            } if (!(e.target.style.backgroundColor === 'white')) {
-                openedCells+=1;
-            } if (e.target.textContent === '0'){
-                e.target.style.backgroundColor = 'white';
-                e.target.setAttribute('data-flagged', 0);
+        if (e.target.textContent === '0') {
+            if (e.target.getAttribute('data-num').length === 3) {
+                let place = e.target.getAttribute('data-num').match(/\d/g);
+                let x = parseInt(place[0]);
+                let y = parseInt(place[1]);
+                openZeros(x, y);
+                openRest();
             } else {
-                e.target.style.fontSize = '35px';
-                e.target.style.backgroundColor = 'white';
-                e.target.setAttribute('data-flagged', 0);
+                let place = e.target.getAttribute('data-num').replace(/^\D+/g, '');
+                let x = parseInt(place.slice(0, 2));
+                let y = Math.abs(parseInt(place.slice(2)));
+                openZeros(x, y)
+                openRest();
             }
+        } if (!(e.target.style.backgroundColor === 'white')) {
+            openedCells += 1;
+        } if (e.target.textContent === '0') {
+            e.target.style.backgroundColor = 'white';
+            e.target.setAttribute('data-flagged', 0);
+        } else {
+            e.target.style.fontSize = '35px';
+            e.target.style.backgroundColor = 'white';
+            e.target.setAttribute('data-flagged', 0);
+        }
         if (openedCells === totalCells - bombNumber) {
             document.querySelector('h2').textContent = `Mission Accomplished`;
             document.querySelector('#bomb').src = 'https://media.giphy.com/media/13n4Hd98ewKJsQ/giphy.gif';
             document.querySelector('#bomb1').src = 'https://media.giphy.com/media/13n4Hd98ewKJsQ/giphy.gif';
-            setTimeout(()=> {
+            setTimeout(() => {
                 document.querySelector('#bomb').style.visibility = 'visible';
                 document.querySelector('#bomb1').style.visibility = 'visible';
             }, 150)
-            document.querySelector('#container').removeEventListener('click',revealBox);
-            document.querySelector('body').removeEventListener('contextmenu',rightClick);
+            document.querySelector('#container').removeEventListener('click', revealBox);
+            document.querySelector('body').removeEventListener('contextmenu', rightClick);
         }
     }
 }
 //Function to freeze box if right-clicked and unfreeze if right-clicked again
 function rightClick(e) {
-    if (e.target.className.includes('box') && !(e.target.getAttribute('data-flagged') === "1") && !(e.target.getAttribute('data-flagged') === "0") ) {
+    if (e.target.className.includes('box') && !(e.target.getAttribute('data-flagged') === "1") && !(e.target.getAttribute('data-flagged') === "0")) {
         e.preventDefault();
         e.target.style.backgroundColor = 'green';
         e.target.setAttribute('data-flagged', 1);
@@ -162,7 +162,7 @@ function rightClick(e) {
 
 //Removes current board so game can be reset
 function removeBoard(rows) {
-    for (let i = rows-1; i >= 0; i -= 1 ) {
+    for (let i = rows - 1; i >= 0; i -= 1) {
         document.querySelector(`#container`).removeChild(document.querySelector(`#container`).childNodes[i])
     }
 }
@@ -180,37 +180,37 @@ function resetGame() {
     document.querySelector('#bomb1').src = 'https://media.giphy.com/media/X92pmIty2ZJp6/giphy.gif'
     document.querySelector('#bomb').style.visibility = 'hidden';
     document.querySelector('#bomb1').style.visibility = 'hidden';
-    document.querySelector('#container').addEventListener('click',revealBox);
-    document.querySelector('body').addEventListener('contextmenu',rightClick);
+    document.querySelector('#container').addEventListener('click', revealBox);
+    document.querySelector('body').addEventListener('contextmenu', rightClick);
 }
 
 //Adds click and right click event listeners
-document.querySelector('body').addEventListener('contextmenu',rightClick);
-document.querySelector('#container').addEventListener('click',revealBox);
+document.querySelector('body').addEventListener('contextmenu', rightClick);
+document.querySelector('#container').addEventListener('click', revealBox);
 
 //Calculates all surrounding neighbors and if they haven't already been cicked they get added to an array
 let toOpen = [];
-function openZeros(x,y) {
+function openZeros(x, y) {
     for (let i = 0; i < neighborsCheck.length; i += 1) {
         if ((x + neighborsCheck[i].x >= 0 && x + neighborsCheck[i].x < arr.length) && (y + neighborsCheck[i].y >= 0 && y + neighborsCheck[i].y < arr.length)) {
-            let location = {x:x + neighborsCheck[i].x, y:y + neighborsCheck[i].y};
+            let location = { x: x + neighborsCheck[i].x, y: y + neighborsCheck[i].y };
             let param1 = x + neighborsCheck[i].x
             let param2 = y + neighborsCheck[i].y
             if (!(document.querySelector(`[data-num = '${param1}-${param2}']`).style.backgroundColor === 'white')) {
                 toOpen.push(location);
+            }
         }
     }
+    return toOpen;
 }
-        return toOpen;
-    }
 //Opens all the surrounding neighbors from array and reruns the toOpen function if one of the newly opened is a 0
 function openRest() {
-    for (let i = 0;i < toOpen.length;i+=0) {
+    for (let i = 0; i < toOpen.length; i += 0) {
         if (!(document.querySelector(`[data-num = '${toOpen[i].x}-${toOpen[i].y}']`).style.backgroundColor === 'white')) {
-            openedCells+=1;
+            openedCells += 1;
         }
-        if (document.querySelector(`[data-num = '${toOpen[i].x}-${toOpen[i].y}']`).textContent === '0'){
-            openZeros(toOpen[i].x,toOpen[i].y)
+        if (document.querySelector(`[data-num = '${toOpen[i].x}-${toOpen[i].y}']`).textContent === '0') {
+            openZeros(toOpen[i].x, toOpen[i].y)
             document.querySelector(`[data-num = '${toOpen[i].x}-${toOpen[i].y}']`).style.backgroundColor = 'white';
             document.querySelector(`[data-num = '${toOpen[i].x}-${toOpen[i].y}']`).setAttribute('data-flagged', 0);
         } else {
@@ -245,4 +245,4 @@ function boardSize() {
     }
 }
 //Adds click ability to Restart Game button
-document.querySelector('#submit').addEventListener('click',boardSize);
+document.querySelector('#submit').addEventListener('click', boardSize);
