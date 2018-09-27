@@ -33,6 +33,7 @@ function buildGameArray(columns) {
 function setZero(arr) {
     for (let i = 0; i < arr.length; i += 1) {
         for (let j = 0; j < arr[i].length; j += 1) {
+            if (!(arr[i][j] === 'bomb'))
             arr[i][j] = 0;
         }
     }
@@ -44,12 +45,14 @@ function placeBombs(num, rows, columns) {
     for (i = 1; i <= num; i += 1) {
         let random = Math.floor(Math.random() * rows);
         let random2 = Math.floor(Math.random() * columns);
-        if (alreadyThere.includes(`${random}-${random2}`)) {
+        if (alreadyThere.includes(`${random}-${random2}`) || arr[random][random2] === 0) {
             i -= 1;
         }
         alreadyThere.push(`${random}-${random2}`);
+        if (!(arr[random][random2] === 0)) {
         document.querySelector(`[data-num = '${random}-${random2}']`).className += ' bomb';
         arr[random][random2] = 'bomb';
+        }
     }
 }
 //Checks all neighbors of specific divs and makes sure they are not off board
@@ -85,10 +88,6 @@ function renderBombs(arr) {
 function setupGame() {
     buildBoard(rows, columns);
     buildGameArray(columns);
-    setZero(arr);
-    placeBombs(bombNumber, rows, columns);
-    bombNeighbors();
-    renderBombs(arr);
     document.querySelector('h2').textContent = `Beware: ${bombNumber} Bombs`;
 }
 setupGame();
@@ -99,6 +98,27 @@ function revealBombs() {
 }
 //Function to reveal the box when clicked
 function revealBox(e) {
+    if (openedCells === 0) {
+        if (e.target.getAttribute('data-num').length === 3) {
+            let place = e.target.getAttribute('data-num').match(/\d/g);
+            let x = parseInt(place[0]);
+            let y = parseInt(place[1]);
+            arr[x][y] = 0;
+            placeBombs(bombNumber, rows, columns);
+            setZero(arr);
+            bombNeighbors();
+            renderBombs(arr);
+        } else {
+            let place = e.target.getAttribute('data-num').replace(/^\D+/g, '');
+            let x = parseInt(place.slice(0, 2));
+            let y = Math.abs(parseInt(place.slice(2)));
+            arr[x][y] = 0;
+            placeBombs(bombNumber, rows, columns);
+            setZero(arr);
+            bombNeighbors();
+            renderBombs(arr);
+        }
+    }
     if (e.target.className.includes('box bomb') && !(e.target.getAttribute('data-flagged') === "1")) {
         e.target.style.objectPosition = '0';
         revealBombs();
